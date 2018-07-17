@@ -1,0 +1,58 @@
+#include<glut.h>
+#include<stdio.h>
+
+float v[3][2]={{0,1},{-0.5,-0.5},{0.5,-0.5}};
+void init()
+{
+	glMatrixMode(GL_PROJECTION);
+	gluOrtho2D(-2,2,-2,2);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void triangle(float *a,float *b,float *c)
+{
+	glBegin(GL_TRIANGLES);
+		glVertex2fv(a);
+		glVertex2fv(b);
+		glVertex2fv(c);
+	glEnd();
+}
+void divide_triangle(float *a,float *b,float *c,int n)
+{
+	float v1[2],v2[2],v3[2];
+	int j;
+	if(n>0)
+	{
+		for(j=0;j<2;j++)
+		{
+			v1[j]=(a[j]+b[j])/2;
+			v2[j]=(a[j]+c[j])/2;
+			v3[j]=(b[j]+c[j])/2;
+		}
+		divide_triangle(a,v1,v2,n-1);
+		divide_triangle(v1,b,v3,n-1);
+		divide_triangle(v2,v3,c,n-1);
+	}
+	else
+	{
+		triangle(a,b,c);
+	}
+}
+void show()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1,1,1,1);
+	glColor3f(1,0,0);
+	divide_triangle(v[0],v[1],v[2],5);
+	glFinish();
+}
+void main()
+{
+	glutInitWindowPosition(100,100);
+	glutInitWindowSize(600,600);
+	glutCreateWindow("Gasket");
+	init();
+	glutDisplayFunc(show);
+	glutMainLoop();
+}

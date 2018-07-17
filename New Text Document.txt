@@ -1,0 +1,1 @@
+Basic data base & sms setting can be editted in db.php file
